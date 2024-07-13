@@ -8,7 +8,7 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 export default function AdminState({ children }: { children: any }) {
 
-    if(!process.env.NEXT_PUBLIC_API_URL){
+    if(!process.env.NEXT_PUBLIC_URL){
           throw new Error("API_URL not found");
     }
     const [activeApplications, setActiveApplications] = useState<IActiveApplication[]>([]);

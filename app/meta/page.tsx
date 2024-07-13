@@ -207,7 +207,7 @@ export default function BlogPage() {
     </Select>
                 {phaseDocuments.filter((pd) => pd.phaseId === phase.order)
                   .map((doc) => (
-                    <Chip id={String(doc.documentTypeCode)} onClose={() => onOpen(phase.order, doc.documentTypeCode)} variant="flat">
+                    <Chip key={String(doc.documentTypeCode)} onClose={() => onOpen(phase.order, doc.documentTypeCode)} variant="flat">
                       {documents.find((d) => d.code === doc.documentTypeCode)?.name}
                     </Chip>
                   ))}
