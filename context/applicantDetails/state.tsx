@@ -8,7 +8,7 @@ import axios, { AxiosInstance } from "axios";
 
 // Create the context with the typed default values
 import { ApplicantDetailsContext } from "./context";
-import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, QualifyingExaminationDetails, MatriculationDetails, BankDetails } from "./interface";
+import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, QualifyingExaminationDetails, MatriculationDetails, BankDetails, IDocumentDetails, Allotment } from "./interface";
 import { AuthContext } from "../auth/context";
 const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) => {
       const context = useContext(AuthContext);
@@ -29,6 +29,8 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
   const [qualifyingExaminationDetails, setQualifyingExaminationDetails] = useState<QualifyingExaminationDetails | null>(null);
   const [matriculationDetails, setMatriculationDetails] = useState<MatriculationDetails | null>(null);
   const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
+  const [Documents, setDocuments] = useState<IDocumentDetails[]>([])
+  const [Allotments, setAllotments] = useState<Allotment[]>([])
 
 
 
@@ -61,10 +63,11 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
     
       } catch (err) {
           console.log(err, "error in fetchApplication");
+          setApplicationLoading(false)
       return;
       }
       
-      if (response){
+      if (response.status === 200){
       setApplicantDetails(response.data.ApplicantDetails);
       setParentDetails(response.data.parentDetails);
       setPermanentAddress(response.data.permanentAddress);
@@ -74,6 +77,8 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
       setQualifyingExaminationDetails(response.data.qualifyingExaminationDetails);
       setMatriculationDetails(response.data.matriculationDetails);
       setBankDetails(response.data.bankDetails);
+      setDocuments(response.data.Document);
+      setAllotments(response.data.Allotment);
     }
     setApplicationLoading(false);
     }
@@ -96,6 +101,9 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         qualifyingExaminationDetails,
         matriculationDetails,
         bankDetails,
+        Documents,
+        Allotments,
+        setAllotments,
         setApplicantDetails,
         setParentDetails,
         setPermanentAddress,
@@ -105,6 +113,7 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setQualifyingExaminationDetails,
         setMatriculationDetails,
         setBankDetails,
+        setDocuments
       }}
     >
       {children}

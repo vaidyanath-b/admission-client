@@ -28,3 +28,34 @@ export default async function getUserSession(): Promise<{
       return { user: null, accessToken: "" };
     });
 }
+
+ async function downloadFile(
+  bucketName: string,
+  filePath: string
+): Promise<string | null> {
+  try {
+    const supabase = createSupabaseServerClient();
+    const { data: d, error: e } = await supabase.storage
+      .from(bucketName)
+      .list();
+
+    console.log("Files in bucket:", d);
+
+    console.log("Downloading file", filePath, bucketName);
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .download(filePath);
+
+    if (error) {
+      throw error;
+    }
+
+    if (data) {
+        return Buffer.from(await data.arrayBuffer()).toString("base64");
+    }
+  } catch (error) {
+    console.error("Error downloading file:", error);
+  }
+  console.log("Error downloading file");
+  return null;
+}

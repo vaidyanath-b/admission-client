@@ -10,6 +10,7 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import ApplicationState from "@/context/applicantDetails/state";
 import AuthState from "@/context/auth/state";
+import MetaState from "@/context/metaContext/state";
 
 export const metadata: Metadata = {
   title: {
@@ -47,6 +48,7 @@ export default function RootLayout({
           <AuthState>
 
           <ApplicationState>
+           <MetaState>
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="container mx-auto pt-16 flex-grow">
@@ -56,7 +58,7 @@ export default function RootLayout({
               <Link
                 isExternal
                 className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
+                href="mec.ac.in"
                 title="Model Engineering College"
                 >
                 <span className="text-default-600">Admission</span>
@@ -64,6 +66,7 @@ export default function RootLayout({
               </Link>
             </footer>
           </div>
+                  </MetaState>
               </ApplicationState>
                 </AuthState>
                 </Providers>

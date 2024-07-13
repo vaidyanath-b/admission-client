@@ -77,6 +77,23 @@ export interface BankDetails {
   ifscCode: string;
 }
 
+export interface IDocumentDetails {
+  filename: string;
+  url: string;
+  createdAt: Date;
+  updatedAt: Date;
+  applicantId?: number; // Assuming Applicant ID is a number
+  documentTypeCode: string;
+}
+export interface Allotment {
+  allotment: number;
+  applicantId?: number;
+  course: string; // Assuming Course is defined elsewhere
+  quota: string; // Assuming Quota is defined elsewhere
+  allotmentMemoLink?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 export interface ApplicantContextType {
   // axiosPriv: AxiosInstance | null;
   accessToken: string;
@@ -90,6 +107,9 @@ export interface ApplicantContextType {
   qualifyingExaminationDetails: QualifyingExaminationDetails | null;
   matriculationDetails: MatriculationDetails | null;
   bankDetails: BankDetails | null;
+  Documents: IDocumentDetails[];
+  Allotments: Allotment[];
+  setDocuments: Dispatch<SetStateAction<IDocumentDetails[]>>;
   setApplicantDetails: Dispatch<SetStateAction<ApplicantDetails | null>>;
   setParentDetails: Dispatch<SetStateAction<ParentDetails | null>>;
   setPermanentAddress: Dispatch<SetStateAction<Address | null>>;
@@ -105,4 +125,5 @@ export interface ApplicantContextType {
     SetStateAction<MatriculationDetails | null>
   >;
   setBankDetails: Dispatch<SetStateAction<BankDetails | null>>;
+  setAllotments: Dispatch<SetStateAction<Allotment[]>>;
 }
