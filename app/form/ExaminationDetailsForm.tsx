@@ -59,7 +59,7 @@ const ExaminationDetailsForm = ({setTab} : {setTab:()=>void}) => {
     setMatriculationDetails(convertedData.matriculationDetails);
     const {applicantId:qa , ...qData} = convertedData.qualifyingExaminationDetails;
     const {applicantId:ma , ...mData} = convertedData.matriculationDetails;
-    await axios.post(`http://localhost:3000/api/applicant/`,
+    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
       {
       qualifyingExaminationDetails:qData,
       matriculationDetails:mData

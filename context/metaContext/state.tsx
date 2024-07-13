@@ -20,7 +20,7 @@ export default function MetaState({ children }: { children: any }) {
             if (!accessToken) {
                 return;
             }
-            const response = await axios.get(`http://localhost:3000/api/meta`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/meta`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                     "content-type": "application/json",

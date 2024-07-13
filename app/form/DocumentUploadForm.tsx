@@ -57,10 +57,10 @@ const DocumentUpload: React.FC = () => {
 
       if (type === 'document' && code) {
         file = selectedFiles[code];
-        url = `http://localhost:3000/api/document/${code}`;
+        url = `${process.env.NEXT_PUBLIC_URL}/api/document/${code}`;
       } else if (type === 'allotment' && selectedAllotment) {
         file = selectedFiles[`allotment_${selectedAllotment}`];
-        url = `http://localhost:3000/api/document/memo`;
+        url = `${process.env.NEXT_PUBLIC_URL}/api/document/memo`;
       }
 
       if (!file) {

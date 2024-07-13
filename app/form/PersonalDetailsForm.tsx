@@ -36,7 +36,7 @@ const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
     const {applicantId , ...dataToSend} = convertedData;
     setApplicantDetails(data);
 const res = await axios.post(
-      `http://localhost:3000/api/applicant`,
+      `${process.env.NEXT_PUBLIC_URL}/api/applicant`,
       { 
         ApplicantDetails: dataToSend,
         

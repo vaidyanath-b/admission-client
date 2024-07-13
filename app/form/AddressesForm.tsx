@@ -37,7 +37,7 @@ const AddressesForm = ({setTab} : {setTab : () => void}) => {
     const {applicantId:q , ...prData} = data.presentAddress;
      const {applicantId:p , ...pData} = data.permanentAddress
       const {applicantId:g , ...gData} = data.guardianAddress
-    const res = await axios.post(`http://localhost:3000/api/applicant`,
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant`,
     {
       permanentAddress:pData,
       presentAddress:prData,

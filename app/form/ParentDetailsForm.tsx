@@ -27,7 +27,7 @@ const ParentsForm = ({setTab} : {setTab:()=>void}) => {
     setParentDetails(data);
         const {applicantId , ...dataToSend} = data;
 const res = await axios.post(
-      `http://localhost:3000/api/applicant`,
+      `${process.env.NEXT_PUBLIC_URL}/api/applicant`,
       { parentDetails: dataToSend
        }, // This is the data payload
       {

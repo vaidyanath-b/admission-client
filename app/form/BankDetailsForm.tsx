@@ -26,7 +26,7 @@ const BankDetailsForm = ({setTab} : {setTab:()=>void}) => {
     const {accessToken} = await getUserSession();
     const {applicantId , ...dataToSend} = data;
     setBankDetails(data);
-    await axios.post(`http://localhost:3000/api/applicant/`,
+    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
       {
      bankDetails:dataToSend
     },{

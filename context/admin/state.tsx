@@ -18,7 +18,7 @@ export default function AdminState({ children }: { children: any }) {
     async function fetchAdminData() {
         try {
             const {accessToken} = await getUserSession();
-            const activeApplications = await axios.get("http://localhost:3000/api/admin/applications",{
+            const activeApplications = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/admin/applications`,{
                 headers: {
                     Authorization: `Bearer ${accessToken || ""}`,
                     "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export default function AdminState({ children }: { children: any }) {
             
             });
             setActiveApplications(activeApplications.data);
-            const allotmentCount = await axios.get("http://localhost:3000/api/admin/allotment-count",{
+            const allotmentCount = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/admin/allotment-count`,{
                 headers: {
                     Authorization: `Bearer ${accessToken || ""}`,
                     "Content-Type": "application/json",

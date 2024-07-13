@@ -37,7 +37,7 @@ const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
     };
     setPreviousInstitutionDetails(convertedData);
     const {applicantId , ...dataToSend} = convertedData;
-    await axios.post(`http://localhost:3000/api/applicant/`,
+    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
       {
       previousInstitutionDetails:dataToSend
     },{        headers: {
