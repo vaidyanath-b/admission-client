@@ -5,6 +5,7 @@ import { IDocument, MetaContext } from "@/context/metaContext/context";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context";
 import getUserSession from "@/lib/actions";
 import { createClient } from "@/lib/supabase/client";
+import { apiUrl } from "@/lib/env";
 
 // Hardcoded allotments
 const hardcodedAllotments = [1, 2, 3];
@@ -57,10 +58,10 @@ const DocumentUpload: React.FC = () => {
 
       if (type === 'document' && code) {
         file = selectedFiles[code];
-        url = `${process.env.NEXT_PUBLIC_URL}/api/document/${code}`;
+        url = `${apiUrl}/api/document/${code}`;
       } else if (type === 'allotment' && selectedAllotment) {
         file = selectedFiles[`allotment_${selectedAllotment}`];
-        url = `${process.env.NEXT_PUBLIC_URL}/api/document/memo`;
+        url = `${apiUrl}/api/document/memo`;
       }
 
       if (!file) {

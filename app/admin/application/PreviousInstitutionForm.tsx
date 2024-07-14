@@ -6,6 +6,8 @@ import axios from "axios";
 import { PreviousInstitutionDetails } from "@/context/applicantDetails/interface";
 import {DateValue, parseDate, getLocalTimeZone} from "@internationalized/date";
 import {useDateFormatter} from "@react-aria/i18n";
+import getUserSession from "@/lib/actions";
+import { apiUrl } from "@/lib/env";
 
 const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
   const context = useContext(ApplicantDetailsContext);
@@ -13,7 +15,7 @@ const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
   const defaultDateValue =  "2024-01-01"
-  const { previousInstitutionDetails, setPreviousInstitutionDetails ,accessToken} = context;
+  const { previousInstitutionDetails, setPreviousInstitutionDetails } = context;
   const { control, getValues, handleSubmit } = useForm<PreviousInstitutionDetails>({
     defaultValues: {
       ...previousInstitutionDetails,
@@ -30,6 +32,7 @@ const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
   };
 
   const saveAndNext = async (data: PreviousInstitutionDetails) => {
+    const {accessToken} = await getUserSession();
     const convertedData = {
       ...data,
       dateOfAdmission: new Date(data.dateOfAdmission),
@@ -37,7 +40,7 @@ const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
     };
     setPreviousInstitutionDetails(convertedData);
     const {applicantId , ...dataToSend} = convertedData;
-    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
+    await axios.post(`${apiUrl}/api/applicant/`,
       {
       previousInstitutionDetails:dataToSend
     },{        headers: {

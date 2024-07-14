@@ -5,6 +5,7 @@ import { IMetaContext } from "./context";
 import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import axios from "axios";
+import { apiUrl } from "@/lib/env";
 
 export default function MetaState({ children }: { children: any }) {
     const [phases, setPhases] = useState<IMetaContext["phases"]>([]);
@@ -20,7 +21,7 @@ export default function MetaState({ children }: { children: any }) {
             if (!accessToken) {
                 return;
             }
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/meta`, {
+            const response = await axios.get(`${apiUrl}/api/meta`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                     "content-type": "application/json",

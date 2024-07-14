@@ -4,6 +4,7 @@ import { Button, Input, Spacer } from "@nextui-org/react";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; import axios from "axios";
 import { error } from "console";
 import getUserSession from "@/lib/actions";
+import { apiUrl } from "@/lib/env";
 
 const BankDetailsForm = ({setTab} : {setTab:()=>void}) => {
   const context = React.useContext(ApplicantDetailsContext);
@@ -26,7 +27,7 @@ const BankDetailsForm = ({setTab} : {setTab:()=>void}) => {
     const {accessToken} = await getUserSession();
     const {applicantId , ...dataToSend} = data;
     setBankDetails(data);
-    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
+    await axios.post(`${apiUrl}/api/applicant/`,
       {
      bankDetails:dataToSend
     },{

@@ -3,22 +3,20 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "./context";
 import getUserSession from "@/lib/actions";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import { apiUrl } from "@/lib/env";
 
 
 export default function AuthState({ children }: { children: any }) {
 
-   if(!process.env.NEXT_PUBLIC_URL){
+   if(!apiUrl){
          throw new Error("API_URL not found");
     }
-  const [accessToken, setAccessToken] = useState("");
     const [user, setUser] = useState(null);
-    const [axiosPriv , setAxiosPriv] = useState<AxiosInstance|null>(null);
     const [authLoading, setLoading] = useState(true);
     const [error, setError] = useState("");
     async function fetchUserSession() {
         try {
             const { user, accessToken } = await getUserSession();
-            setAccessToken(accessToken);
             setUser(user);
             
         } catch (error:any) {
@@ -30,7 +28,7 @@ export default function AuthState({ children }: { children: any }) {
         fetchUserSession();
     }, []);
     return (
-        <AuthContext.Provider value={{ accessToken,axiosPriv, user ,setUser, authLoading }}>
+        <AuthContext.Provider value={{ user ,setUser, authLoading }}>
             
             {
                 authLoading ? (

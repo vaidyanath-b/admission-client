@@ -7,8 +7,8 @@ import axios, { AxiosInstance } from "axios";
 // Define the default values for the context
 
 // Create the context with the typed default values
-import { ApplicantDetailsContext } from "./context";
-import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, QualifyingExaminationDetails, MatriculationDetails, BankDetails, IDocumentDetails, Allotment } from "./interface";
+import { AdminApplicantContext } from "./context";
+import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, QualifyingExaminationDetails, MatriculationDetails, BankDetails, IDocumentDetails, Allotment } from "../applicantDetails/interface";
 import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
@@ -17,11 +17,10 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
       if (!context) {
         throw new Error("useAuth must be used within a AuthProvider");
       }
-      const {   user , authLoading } = context;
-
-  
+  const { user , authLoading } = context;
   const [userError, setUserError] = useState("");
   const [applicationLoading , setApplicationLoading] = useState(true);
+  const [applicantId , setApplicantId] = useState<number | null>(null)
   const [applicantDetails, setApplicantDetails] = useState<ApplicantDetails | null>(null);
   const [parentDetails, setParentDetails] = useState<ParentDetails | null>(null);
   const [permanentAddress, setPermanentAddress] = useState<Address | null>(null);
@@ -33,13 +32,16 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
   const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
   const [Documents, setDocuments] = useState<IDocumentDetails[]>([])
   const [Allotments, setAllotments] = useState<Allotment[]>([])
-
-
-
-
-
+  const [applicantError , setApplicantError] = useState<any>(null);
   useEffect(() => {
+
+    if(!applicantId){
+      console.log("no applicant id found");
+      setApplicationLoading(false);
+      return;
+    }
     async function fetchUserApplication() {
+      const {accessToken} = await getUserSession();
       if(authLoading)
         return;
       
@@ -47,15 +49,14 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setUserError("User not found");
         return;
       }
+      if(!applicantId){
+
+      }
   
       let response;
       try {
-        const {accessToken} = await getUserSession();
-        if(!accessToken){
-          return;
-        }
-        console.log("fetching application");
-        response = await axios.get(`${apiUrl}/api/applicant`, {
+        console.log("fetching admin application", accessToken);
+        response = await axios.get(`${apiUrl}/api/admin/applicant/${Number(applicantId)}`, {
         headers: {
           Authorization: `Bearer ${accessToken || ""}`,
           "Content-Type": "application/json",
@@ -66,6 +67,7 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
 
     );
       console.log(response , "fetched application");
+      setApplicationLoading(false)
     
       } catch (err) {
           console.log(err, "error in fetchApplication");
@@ -85,6 +87,7 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
       setBankDetails(response.data.bankDetails);
       setDocuments(response.data.Document);
       setAllotments(response.data.Allotment);
+      setApplicantError(null)
     }
     setApplicationLoading(false);
     }
@@ -92,10 +95,11 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         fetchUserApplication();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [applicantId]);
 
-  return <ApplicantDetailsContext.Provider
+  return <AdminApplicantContext.Provider
     value={{
+        applicantId,
         applicationLoading,
         applicantDetails,
         parentDetails,
@@ -118,11 +122,12 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setQualifyingExaminationDetails,
         setMatriculationDetails,
         setBankDetails,
-        setDocuments
+        setDocuments,
+        setApplicantId
       }}
     >
       {children}
-    </ApplicantDetailsContext.Provider>
+    </AdminApplicantContext.Provider>
 }
 
   export default ApplicationState;

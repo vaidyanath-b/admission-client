@@ -4,14 +4,17 @@ import { Button, DatePicker, Input } from "@nextui-org/react";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; import axios from "axios";
 import { ApplicantDetails } from "@/context/applicantDetails/interface";
 import {parseDate} from "@internationalized/date";
+import getUserSession from "@/lib/actions";
+import { AdminApplicantContext } from "@/context/adminApplicantDetails/context";
+import { apiUrl } from "@/lib/env";
 
 const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
   const defaultDate = "2006-01-01"
-  const context = useContext(ApplicantDetailsContext);
+  const context = useContext(AdminApplicantContext);
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
-  const { applicationLoading, applicantDetails, setApplicantDetails ,accessToken} = context;
+  const { applicationLoading, applicantDetails, setApplicantDetails } = context;
   
   const { control, getValues, handleSubmit } = useForm<ApplicantDetails>({
     defaultValues: {
@@ -28,6 +31,7 @@ const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
     setApplicantDetails(data);
   }
   const saveAndNext = async (data:any) => {
+    const {accessToken} = await getUserSession();
     const convertedData = {
       ...data,
       annualIncomeOfParents: String(data.annualIncomeOfParents),
@@ -36,7 +40,7 @@ const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
     const {applicantId , ...dataToSend} = convertedData;
     setApplicantDetails(data);
 const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_URL}/api/applicant`,
+      `${apiUrl}/api/applicant`,
       { 
         ApplicantDetails: dataToSend,
         

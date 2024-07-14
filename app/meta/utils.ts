@@ -1,6 +1,6 @@
 import getUserSession from "@/lib/actions";
+import { apiUrl } from "@/lib/env";
 import axios from "axios";
-const apiUrl = `${process.env.NEXT_PUBLIC_URL}`;
 export const deletePhaseDocument = async (
   phaseId: number,
   documentTypeCode: string

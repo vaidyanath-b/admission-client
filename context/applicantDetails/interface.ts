@@ -96,7 +96,6 @@ export interface Allotment {
 }
 export interface ApplicantContextType {
   // axiosPriv: AxiosInstance | null;
-  accessToken: string;
   applicationLoading: boolean;
   applicantDetails: ApplicantDetails | null;
   parentDetails: ParentDetails | null;

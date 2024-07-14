@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button, Input } from "@nextui-org/react";
-import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; 
 import axios from "axios";
 import getUserSession from "@/lib/actions";
+import { AdminApplicantContext } from "@/context/adminApplicantDetails/context";
+import { apiUrl } from "@/lib/env";
 
 const ExaminationDetailsForm = ({setTab} : {setTab:()=>void}) => {
-  const context = React.useContext(ApplicantDetailsContext);
+  const context = React.useContext(AdminApplicantContext);
 
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
@@ -59,7 +60,7 @@ const ExaminationDetailsForm = ({setTab} : {setTab:()=>void}) => {
     setMatriculationDetails(convertedData.matriculationDetails);
     const {applicantId:qa , ...qData} = convertedData.qualifyingExaminationDetails;
     const {applicantId:ma , ...mData} = convertedData.matriculationDetails;
-    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant/`,
+    await axios.post(`${apiUrl}/api/applicant/`,
       {
       qualifyingExaminationDetails:qData,
       matriculationDetails:mData

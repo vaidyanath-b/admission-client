@@ -4,6 +4,7 @@ import { Button, Input, Spacer } from "@nextui-org/react";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; import axios from "axios";
 import { Address } from "cluster";
 import getUserSession from "@/lib/actions";
+import { apiUrl } from "@/lib/env";
 
 const AddressesForm = ({setTab} : {setTab : () => void}) => {
   const context = React.useContext(ApplicantDetailsContext);
@@ -37,7 +38,7 @@ const AddressesForm = ({setTab} : {setTab : () => void}) => {
     const {applicantId:q , ...prData} = data.presentAddress;
      const {applicantId:p , ...pData} = data.permanentAddress
       const {applicantId:g , ...gData} = data.guardianAddress
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/applicant`,
+    const res = await axios.post(`${apiUrl}/api/applicant`,
     {
       permanentAddress:pData,
       presentAddress:prData,

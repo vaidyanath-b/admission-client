@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { Card, CardBody } from "@nextui-org/card";
+import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import PersonalDetailsForm from './PersonalDetailsForm';
 import ParentDetailsForm from './ParentDetailsForm';
 import AddressesForm from './AddressesForm';
@@ -10,10 +10,12 @@ import ExaminationDetailsForm from './ExaminationDetailsForm';
 import BankDetailsForm from './BankDetailsForm';
 import DocumentUploadForm from './DocumentUploadForm';
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context";
+import { Input } from "@nextui-org/input";
 
 export default function App() {
   const [selected, setSelected] = React.useState<any>("personal-details");
   const context = React.useContext(ApplicantDetailsContext);
+
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
