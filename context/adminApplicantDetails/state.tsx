@@ -49,10 +49,6 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setUserError("User not found");
         return;
       }
-      if(!applicantId){
-
-      }
-  
       let response;
       try {
         console.log("fetching admin application", accessToken);
