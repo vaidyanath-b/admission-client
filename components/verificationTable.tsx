@@ -165,11 +165,7 @@ const quotaColorMap: { [key: string]: "primary" | "warning" | "danger" } = {
 };
 
 const ApplicantTable = ({phaseDocuments}:{phaseDocuments:PhaseDocument[]}) => {
-  if(!phaseDocuments || !phaseDocuments.length){
-    return <>
-
-    </>
-  }
+ 
   const [loading , setLoading] = useState(true);
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);

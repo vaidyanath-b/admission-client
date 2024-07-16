@@ -19,8 +19,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 export const CustomNavbar = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    console.log("error in navbar context")
-    return null;
+    throw new Error("Auth Context used outside ")
+    
   }
   const { user ,setUser,role:r} = context;
   const [ role , setRole] = useState(r);
