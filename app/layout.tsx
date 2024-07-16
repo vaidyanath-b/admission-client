@@ -7,7 +7,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
+import { CustomNavbar } from "@/components/navbar";
 import ApplicationState from "@/context/applicantDetails/state";
 import AuthState from "@/context/auth/state";
 import MetaState from "@/context/metaContext/state";
@@ -46,11 +46,9 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <AuthState>
-
-          <ApplicationState>
            <MetaState>
           <div className="relative flex flex-col h-screen">
-            <Navbar />
+            <CustomNavbar />
             <main className="container mx-auto pt-16 flex-grow">
               {children}
             </main>
@@ -67,9 +65,8 @@ export default function RootLayout({
             </footer>
           </div>
                   </MetaState>
-              </ApplicationState>
                 </AuthState>
-                </Providers>
+             </Providers>
       </body>
     </html>
   );

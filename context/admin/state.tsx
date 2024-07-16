@@ -5,6 +5,8 @@ import { AdminContext, IActiveApplication, IAllotmentCount } from "./context";
 import getUserSession from "@/lib/actions";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { apiUrl } from "@/lib/env";
+import { jwtDecode } from "jwt-decode";
+import { redirect } from "next/navigation";
 
 
 export default function AdminState({ children }: { children: any }) {
@@ -19,6 +21,12 @@ export default function AdminState({ children }: { children: any }) {
     async function fetchAdminData() {
         try {
             const {accessToken} = await getUserSession();
+            if(accessToken){
+                const {user_role} = jwtDecode(accessToken) as any;
+                if(user_role == "APPLICANT"){
+                    return redirect('/application')
+                }
+            }
             const activeApplications = await axios.get(`${apiUrl}/api/admin/applications`,{
                 headers: {
                     Authorization: `Bearer ${accessToken || ""}`,

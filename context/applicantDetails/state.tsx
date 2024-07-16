@@ -12,6 +12,8 @@ import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, Q
 import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
+import { jwtDecode } from "jwt-decode";
+import { redirect } from "next/navigation";
 const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) => {
       const context = useContext(AuthContext);
       if (!context) {
@@ -51,9 +53,15 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
       let response;
       try {
         const {accessToken} = await getUserSession();
+
         if(!accessToken){
           return;
         }
+        const {user_role} =  jwtDecode(accessToken) as any
+        if(user_role == "ADMIN"){
+          redirect("/admin")
+        }
+
         console.log("fetching application");
         response = await axios.get(`${apiUrl}/api/applicant`, {
         headers: {

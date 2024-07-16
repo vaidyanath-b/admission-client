@@ -2,14 +2,9 @@ import { AxiosInstance } from "axios";
 import { createContext } from "react";
 
 interface IAuthContext {
-    user :{
-        id: string;
-        applicantId: string;
-        email: string;
-        name: string;
-        role: string;
-    } | null;
+    user :any;
     authLoading: boolean;
     setUser : (user: any) => void;
+    role:string
 }
 export const AuthContext = createContext<IAuthContext|null>(null);

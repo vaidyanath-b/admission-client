@@ -7,10 +7,11 @@ import { signInWithEmailAndPassword, signUpWithEmailAndPassword } from "../actio
 import axios from "axios";
 import { apiUrl } from "@/lib/env";
 import getUserSession from "@/lib/actions";
+import { jwtDecode } from "jwt-decode";
 
 export default function App() {
 
-    const router = useRouter();
+  const router = useRouter();
   const context = React.useContext(AuthContext);
     if (!context) {
         throw new Error("useAuth must be used within a AuthProvider");

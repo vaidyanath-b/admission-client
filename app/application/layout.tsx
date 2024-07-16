@@ -1,16 +1,16 @@
 import "@/styles/globals.css";
 import React from "react";
-import AdminState from "@/context/admin/state";
+import ApplicationState from "@/context/applicantDetails/state";
 
-export default function AdminLayout({
+export default function ApplicantLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-        <AdminState>
+        <ApplicationState>
               {children}
               {/* Footer content */}
-        </AdminState>
+        </ApplicationState>
   );
 }
