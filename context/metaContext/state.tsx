@@ -18,6 +18,7 @@ export default function MetaState({ children }: { children: any }) {
         console.log("metaState");
         async function getMetaData() {
             setMetaLoading(true);
+            console.log("meta loading true")
             try{
             const {accessToken} = await getUserSession();
             if (!accessToken) {
@@ -29,7 +30,6 @@ export default function MetaState({ children }: { children: any }) {
                     Authorization: `Bearer ${accessToken}`,
                     "content-type": "application/json",
                 },
-
             });
             console.log(response.data);
             setPhases(response.data.phases);
@@ -45,7 +45,7 @@ export default function MetaState({ children }: { children: any }) {
         getMetaData();
     } , []);
     return (
-        metaLoading ? <Spinner className="h-screen w-full self-center m-auto"color="success" />:
+        metaLoading ? <Spinner className="h-screen w-full self-center m-auto" color="success" />:
         <MetaContext.Provider value={{ loading:metaLoading,phases, documents, phaseDocuments , setPhases , setDocuments , setPhaseDocuments }}>
             {children}
         </MetaContext.Provider>

@@ -19,6 +19,7 @@ export default function AuthState({ children }: { children: any }) {
   const [authLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [role, setRole] = useState("");
+  const [authStateChanged , setAuthStateChanged] = useState(false); 
 
   async function fetchUserSession() {
     try {
@@ -39,10 +40,10 @@ export default function AuthState({ children }: { children: any }) {
   useEffect(() => {
     console.log("authState");
     fetchUserSession();
-  }, []);
+  }, [authStateChanged]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, authLoading, role }}>
+    <AuthContext.Provider value={{ user, setUser, authLoading, role,setAuthStateChanged }}>
       {authLoading ? (
         <Spinner className="h-screen w-full self-center m-auto"color="danger"/>
 

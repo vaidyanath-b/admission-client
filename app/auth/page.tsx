@@ -16,7 +16,7 @@ export default function App() {
     if (!context) {
         throw new Error("useAuth must be used within a AuthProvider");
     }
-    const {user , setUser} = context;
+    const {user , setUser,setAuthStateChanged} = context;
     if (user) {
         router.push("/application");
     }
@@ -37,6 +37,7 @@ export default function App() {
     });
     const {user,accessToken} = await getUserSession();
     setUser(user)
+    setAuthStateChanged((prev)=>!prev)
     if(!accessToken){
       return alert("it went wrong");
     }
@@ -66,9 +67,10 @@ const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
         password: e.currentTarget.password.value,
     });
     if(success)
-    {
+  {
     const {accessToken,user} = await getUserSession();
     setUser(user)
+    setAuthStateChanged((prev)=>!prev)
   }
     
 }
