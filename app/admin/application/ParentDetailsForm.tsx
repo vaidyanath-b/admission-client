@@ -13,7 +13,7 @@ const ParentsForm = ({setTab} : {setTab:()=>void}) => {
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
-  const { applicationLoading,parentDetails , setParentDetails } = context;
+  const { applicationLoading,parentDetails , setParentDetails ,applicantId} = context;
   const { control , getValues , handleSubmit  } = useForm({
     defaultValues: {
       ...parentDetails
@@ -27,9 +27,9 @@ const ParentsForm = ({setTab} : {setTab:()=>void}) => {
     try{
     const {accessToken} = await getUserSession();
     setParentDetails(data);
-        const {applicantId , ...dataToSend} = data;
+        const {applicantId:a , ...dataToSend} = data;
 const res = await axios.post(
-      `${apiUrl}/api/applicant`,
+      `${apiUrl}/api/admin/applicant/${applicantId}`,
       { parentDetails: dataToSend
        }, // This is the data payload
       {

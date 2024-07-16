@@ -34,7 +34,6 @@ export default function App() {
   };
 
 
-
   return (
     !applicationLoading?
     <div className="flex flex-col w-full items-center">

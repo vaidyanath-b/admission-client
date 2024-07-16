@@ -2,8 +2,11 @@
 import React from "react";
 import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader} from "@nextui-org/react";
 import { AuthContext } from "@/context/auth/context";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { signInWithEmailAndPassword, signUpWithEmailAndPassword } from "../actions";
+import axios from "axios";
+import { apiUrl } from "@/lib/env";
+import getUserSession from "@/lib/actions";
 
 export default function App() {
 
@@ -14,19 +17,44 @@ export default function App() {
     }
     const {user , setUser} = context;
     if (user) {
-        router.push("/form");
+        router.push("/application");
     }
   const [selected, setSelected] = React.useState<any>("login");
 
   const handleSignup = async(e: React.FormEvent<HTMLFormElement>) => {
+    try{
     e.preventDefault();
-    console.log(e.currentTarget.email.value , "hello ");
+    const id = e.currentTarget.applicationNo.value;
+    const firstName = e.currentTarget.firstName.value;
+    const lastName = e.currentTarget.lastName.value;
+    console.log(e.currentTarget);
+    console.log(e.currentTarget.applicationNo.value , "hello ");
     await signUpWithEmailAndPassword({
         email: e.currentTarget.email.value,
         password: e.currentTarget.password.value,
         confirm: e.currentTarget.password.value,
     });
-
+    const {accessToken} = await getUserSession();
+    if(!accessToken){
+      return alert("it went wrong");
+    }
+    const res = await axios.post(`${apiUrl}/api/applicant/new`,
+        {
+          id ,
+          firstName,
+          lastName
+        } ,
+        {
+          headers:{
+          Authorization: `Bearer ${accessToken || ""}`,
+          "Content-Type": "application/json",    
+        }}
+    )
+    console.log("res" ,res);
+  }
+  catch(err){
+    console.error(err);
+  }
 
 }
 const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,7 +66,7 @@ const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
 }
   return (
     <div className="flex flex-col w-full justify-center items-center md:h-full">
-      <Card className="max-w-full md:w-1/3 md:h-3/4 md:pt-3 md:px-4">
+      <Card className="max-w-full md:w-1/3 md:h-[95%] md:pt-1 mb-auto md:px-4">
       <CardHeader>
         <h4 className="text-center font-sans font-bold text-2xl w-full mb-2">MEC</h4>
         </CardHeader>   
@@ -74,8 +102,14 @@ const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
               </form>
             </Tab>
             <Tab key="sign-up" title="Sign up">
-              <form className="flex flex-col gap-4 h-[300px]" onSubmit={handleSignup}>
+              <form className="flex flex-col gap-4 h-max" onSubmit={handleSignup}>
                 <Input name="email" isRequired label="Email" placeholder="Enter your email" type="email" />
+                <Input name="applicationNo" isRequired label="Register Number" placeholder="Enter your KEAM Register Number" type="number" />
+                <div className="flex gap-x-2">
+                <Input name="firstName" isRequired label="first name" placeholder="Enter your first name"  />
+                  
+                <Input name="lastName" isRequired label="last name" placeholder="Enter your last name" />
+                </div>
                 <Input
                   isRequired
                   label="Password"
@@ -83,7 +117,7 @@ const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
                   placeholder="Enter your password"
                   type="password"
                 />
-                                 <Input
+                <Input
                   isRequired
                   name="confirm"
                   label="confirm password"

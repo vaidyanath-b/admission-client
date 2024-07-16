@@ -1,4 +1,4 @@
-import React, { useContext, useState, ChangeEvent } from "react";
+import React, { useContext, useState, ChangeEvent, useEffect } from "react";
 import { Accordion, AccordionItem, Button, Modal, Image, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure, Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
 import { IDocument, MetaContext } from "@/context/metaContext/context";
@@ -22,7 +22,7 @@ const DocumentUpload: React.FC = () => {
   }
 
   const { documents: metaDocuments } = metaContext;
-  const { Documents, setDocuments, Allotments, setAllotments } = docsContext;
+  const { Documents, setDocuments, Allotments, setAllotments , applicantId } = docsContext;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
@@ -58,10 +58,10 @@ const DocumentUpload: React.FC = () => {
 
       if (type === 'document' && code) {
         file = selectedFiles[code];
-        url = `${apiUrl}/api/document/${code}`;
+        url = `${apiUrl}/api/admin/document/${code}/${applicantId}`;
       } else if (type === 'allotment' && selectedAllotment) {
         file = selectedFiles[`allotment_${selectedAllotment}`];
-        url = `${apiUrl}/api/document/memo`;
+        url = `${apiUrl}/api/admin/document/allotment/memo/${applicantId}`;
       }
 
       if (!file) {
@@ -115,7 +115,7 @@ const DocumentUpload: React.FC = () => {
         if (!updatedAllotments.some(a => a.allotment === selectedAllotment)) {
           updatedAllotments.push({
             allotment: selectedAllotment,
-            allotmentMemoLink: response.data.filename,
+            allotmentMemoLink: response.data.allotmentMemoLink,
             course: selectedCourse,
             quota: selectedQuota
           });
@@ -159,6 +159,7 @@ const DocumentUpload: React.FC = () => {
     }
   };
 
+
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Document Upload</h2>
@@ -169,7 +170,7 @@ const DocumentUpload: React.FC = () => {
         <Select
           label="Select Allotment"
           placeholder="Choose an allotment"
-          className="max-w-xs mb-4"
+          className="max-w-xs mb-4 mr-2 font"
           selectedKeys={selectedAllotment ? [selectedAllotment.toString()] : []}
           onSelectionChange={(keys) => {
             const selected = Array.from(keys)[0];
@@ -178,7 +179,7 @@ const DocumentUpload: React.FC = () => {
         >
           {hardcodedAllotments.map((allotment) => (
             <SelectItem key={allotment.toString()} value={allotment}>
-              Allotment {allotment}
+               {"allotment " + allotment}
             </SelectItem>
           ))}
         </Select>

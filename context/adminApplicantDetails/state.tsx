@@ -51,6 +51,7 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
       }
       let response;
       try {
+        setApplicationLoading(true)
         console.log("fetching admin application", accessToken);
         response = await axios.get(`${apiUrl}/api/admin/applicant/${Number(applicantId)}`, {
         headers: {

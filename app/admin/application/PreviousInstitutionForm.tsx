@@ -1,24 +1,29 @@
 import React, { useContext, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Button, DatePicker, Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
+import { DatePicker } from "@/components/DayPicker";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; 
 import axios from "axios";
 import { PreviousInstitutionDetails } from "@/context/applicantDetails/interface";
-import {DateValue, parseDate, getLocalTimeZone} from "@internationalized/date";
+import {fromDate ,parseDate, getLocalTimeZone} from "@internationalized/date";
 import {useDateFormatter} from "@react-aria/i18n";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
+import { AdminApplicantContext } from "@/context/adminApplicantDetails/context";
+import { I18NProvider } from "next/dist/server/future/helpers/i18n-provider";
 
 const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
-  const context = useContext(ApplicantDetailsContext);
+  const context = useContext(AdminApplicantContext);
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
   const defaultDateValue =  "2024-01-01"
-  const { previousInstitutionDetails, setPreviousInstitutionDetails } = context;
+  const { previousInstitutionDetails, setPreviousInstitutionDetails ,applicantId} = context;
   const { control, getValues, handleSubmit } = useForm<PreviousInstitutionDetails>({
     defaultValues: {
       ...previousInstitutionDetails,
+      tcDate : previousInstitutionDetails?.tcDate ? new Date(previousInstitutionDetails.tcDate) : new Date(defaultDateValue),
+      dateOfAdmission: previousInstitutionDetails?.dateOfAdmission ? new Date(previousInstitutionDetails.dateOfAdmission) : new Date(defaultDateValue)
     }
   });
 
@@ -39,8 +44,8 @@ const PreviousInstitutionForm = ({setTab} : {setTab:()=>void})=> {
       tcDate: new Date(data.tcDate),
     };
     setPreviousInstitutionDetails(convertedData);
-    const {applicantId , ...dataToSend} = convertedData;
-    await axios.post(`${apiUrl}/api/applicant/`,
+    const {applicantId:s , ...dataToSend} = convertedData;
+    await axios.post(`${apiUrl}/api/admin/applicant/${applicantId}/`,
       {
       previousInstitutionDetails:dataToSend
     },{        headers: {
@@ -64,13 +69,21 @@ setTab();
         control={control}
         render={({ field }) => <Input {...field} isRequired label="Name of the Institution" placeholder="Enter Institution Name" />}
       />
-      <Controller
-        name="dateOfAdmission"
-        control={control}
-        render={({ field }) => <DatePicker {...field} isRequired label="Date of Admission" showMonthAndYearPickers
-        value={parseDate(field.value?.toString().split("T")[0] || defaultDateValue) } 
-        />}
-      />
+<Controller
+      name="dateOfAdmission"
+      control={control}
+      render={({ field }) => {
+        const dateValue = field.value ? new Date(field.value): new Date(defaultDateValue);
+        return (
+          <DatePicker
+            {...field}
+            required
+            placeholder="Date of Admission"
+            value={dateValue.toUTCString()}
+            />
+        );
+      }}
+    />
       <Controller
         name="course"
         control={control}
@@ -96,13 +109,23 @@ setTab();
         control={control}
         render={({ field }) => <Input {...field} isRequired label="TC No" placeholder="Enter TC No" />}
       />
-      <Controller
-        name="tcDate"
-        control={control}
-        render={({ field }) => <DatePicker {...field} isRequired label="TC Date" showMonthAndYearPickers
-          value ={parseDate(field.value?.toString().split("T")[0] || defaultDateValue)}
-        />}
-      />
+
+      
+<Controller
+      name="tcDate"
+      control={control}
+      render={({ field }) => {
+        const dateValue = field.value ? new Date(field.value): new Date(defaultDateValue);
+        return (
+          <DatePicker
+            {...field}
+            required
+            placeholder="tc Date"
+            value={dateValue.toUTCString()}
+            />
+        );
+      }}
+    />
             <Button type="submit"  variant="solid" color="primary" className="col-start-2 w-max ml-auto mr-10 mt-4">Save And Next</Button>
 
     </form>

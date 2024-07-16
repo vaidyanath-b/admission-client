@@ -14,8 +14,8 @@ const BankDetailsForm = ({setTab} : {setTab:()=>void}) => {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
 
-  const { bankDetails, setBankDetails } = context;
-  const { control, handleSubmit, getValues , formState : {errors} } = useForm({
+  const { bankDetails, setBankDetails ,applicantId , applicationLoading} = context;
+  const { control, reset, handleSubmit, getValues ,setValue, formState : {errors}  } = useForm({
     defaultValues: {
     ...bankDetails
     }
@@ -26,9 +26,9 @@ const BankDetailsForm = ({setTab} : {setTab:()=>void}) => {
   };
   const saveAndNext = async (data: any) => {
     const {accessToken} = await getUserSession();
-    const {applicantId , ...dataToSend} = data;
+    const {applicantId:s , ...dataToSend} = data;
     setBankDetails(data);
-    await axios.post(`${apiUrl}/api/applicant/`,
+    await axios.post(`${apiUrl}/api/admin/applicant/${applicantId}/`,
       {
      bankDetails:dataToSend
     },{
@@ -50,6 +50,8 @@ setTab();  };
       onSubmit(values);
     };
   }, [errors]);
+
+
 
   return (
     <form onSubmit={handleSubmit(saveAndNext)} className="grid grid-cols-2 gap-7 p-5" >

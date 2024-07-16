@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Button, DatePicker, Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { ApplicantDetailsContext } from "@/context/applicantDetails/context"; import axios from "axios";
+import { DatePicker } from "@/components/DayPicker";
 import { ApplicantDetails } from "@/context/applicantDetails/interface";
 import {parseDate} from "@internationalized/date";
 import getUserSession from "@/lib/actions";
@@ -9,16 +10,18 @@ import { AdminApplicantContext } from "@/context/adminApplicantDetails/context";
 import { apiUrl } from "@/lib/env";
 
 const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
-  const defaultDate = "2006-01-01"
+  const defaultDate = new Date("2006-01-01")
   const context = useContext(AdminApplicantContext);
   if (!context) {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
-  const { applicationLoading, applicantDetails, setApplicantDetails } = context;
+  const { applicationLoading, applicantDetails, setApplicantDetails ,applicantId} = context;
   
   const { control, getValues, handleSubmit } = useForm<ApplicantDetails>({
     defaultValues: {
       ...applicantDetails,
+      dateOfBirth:applicantDetails?.dateOfBirth || defaultDate
+
     }
   });
 
@@ -37,10 +40,10 @@ const PersonalDetailsForm = ({setTab} : {setTab:()=>void}) => {
       annualIncomeOfParents: String(data.annualIncomeOfParents),
       dateOfBirth: new Date(data.dateOfBirth),
     };
-    const {applicantId , ...dataToSend} = convertedData;
+    const {applicantId:s , ...dataToSend} = convertedData;
     setApplicantDetails(data);
 const res = await axios.post(
-      `${apiUrl}/api/applicant`,
+      `${apiUrl}/api/admin/applicant/${applicantId}`,
       { 
         ApplicantDetails: dataToSend,
         
@@ -81,11 +84,19 @@ setTab();  }
       <Controller
         name="dateOfBirth"
         control={control}
-        render={({ field }) => <DatePicker {...field} isRequired label="Date of Birth (DD/MM/YYYY)" showMonthAndYearPickers 
-        value = {parseDate(field.value?.toString().split("T")[0] || defaultDate) }
-        />}
-        />
-      <Controller
+        render={({ field }) => {
+          const dateValue = field.value ? new Date(field.value): defaultDate;
+          return (
+            <DatePicker
+              {...field}
+              required
+              placeholder="Date of Birth (DD/MM/YYYY)"
+              value={dateValue.toUTCString()}
+              />
+          );
+        }}
+      />
+        <Controller
         name="gender"
         control={control}
         render={({ field }) => <Input {...field} isRequired label="Gender" placeholder="Enter Gender" />}

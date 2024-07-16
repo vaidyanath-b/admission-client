@@ -13,7 +13,7 @@ const ExaminationDetailsForm = ({setTab} : {setTab:()=>void}) => {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
 
-  const { qualifyingExaminationDetails, setQualifyingExaminationDetails, matriculationDetails, setMatriculationDetails} = context;
+  const { qualifyingExaminationDetails, setQualifyingExaminationDetails, matriculationDetails, setMatriculationDetails,applicantId} = context;
   
   
   const { control, handleSubmit, getValues } = useForm({
@@ -60,7 +60,7 @@ const ExaminationDetailsForm = ({setTab} : {setTab:()=>void}) => {
     setMatriculationDetails(convertedData.matriculationDetails);
     const {applicantId:qa , ...qData} = convertedData.qualifyingExaminationDetails;
     const {applicantId:ma , ...mData} = convertedData.matriculationDetails;
-    await axios.post(`${apiUrl}/api/applicant/`,
+    await axios.post(`${apiUrl}/api/admin/applicant/${applicantId}/`,
       {
       qualifyingExaminationDetails:qData,
       matriculationDetails:mData

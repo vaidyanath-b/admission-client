@@ -17,7 +17,7 @@ interface Applicant {
   }[];
   Document: {
     documentTypeCode: string;
-    fileName: string | null;
+    filename: string | null;
     DocumentUpdate: {
       verification: boolean;
       remarks: string;
@@ -85,7 +85,7 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [imageURL, setImageURL] = useState<string | null>(null);
   const [remarks, setRemarks] = useState<{ [key: string]: string }>({});
-  const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
+  const [statuses, setStatuses] = useState<{ [key: string]: string  }>({});
 
   useEffect(() => {
     const initialStatuses: { [key: string]: string } = {};
@@ -101,7 +101,10 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
     setStatuses(initialStatuses);
   }, [applicant, phaseDocuments]);
 
-  const handleViewImage = async (filePath: string) => {
+  const handleViewImage = async (filePath: string | null) => {
+    if(!filePath){
+      return alert("No file")
+    }
     const url = await downloadFile(filePath);
     if (url) {
       setImageURL(url);
@@ -222,7 +225,7 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
               <div className="mb-4">
                 <p>Course: {applicant.Allotment[0]?.course || "N/A"}</p>
                 <Chip color={quotaColorMap[applicant.Allotment[0]?.quota]} size="sm" variant="flat">
-                  {applicant.Allotment[0]?.quota}
+                   {applicant.Allotment[0]?.quota || "N/A"}
                 </Chip>
               </div>
 
@@ -239,9 +242,10 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
                         {statuses[phaseDocument.documentTypeCode]?.charAt(0).toUpperCase() + statuses[phaseDocument.documentTypeCode]?.slice(1)}
                       </Chip>
                     </div>
-                    <Button size="sm" onPress={() => handleViewImage(`${phaseDocument.documentTypeCode}.jpg`)}>
+                    {statuses[phaseDocument.documentTypeCode] !== "notsubmitted" &&<Button size="sm" onPress={() => handleViewImage(applicant.Document.find((doc)=>doc.documentTypeCode == phaseDocument.documentTypeCode)?.filename || null)}>
                       View
                     </Button>
+                    }
                   </div>
                   <input
                     type="text"

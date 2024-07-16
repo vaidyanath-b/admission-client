@@ -34,11 +34,13 @@ interface DocumentUpdate {
 interface Document {
   documentTypeCode: string;
   DocumentUpdate: DocumentUpdate[];
-  fileName:string | null;
+  filename:string | null;
 }
 
 interface Applicant {
   id: number;
+  firstName:string;
+  lastName:string;
   currentPhaseId: number;
   Allotment: Allotment[];
   Document: Document[];
@@ -72,7 +74,7 @@ const getApplicantsWithPhaseStatus = async (): Promise<{ phaseDocuments: PhaseDo
         ],
         Document: [
           {
-            fileName:"/1234/nice",
+            filename:"/1234/nice",
             documentTypeCode: "DOC001",
             DocumentUpdate: [
               { verification: false, phaseId: 1,remarks:"" },
@@ -80,7 +82,7 @@ const getApplicantsWithPhaseStatus = async (): Promise<{ phaseDocuments: PhaseDo
             ]
           },
           {
-            fileName:"/1234/nice",
+            filename:"/1234/nice",
             documentTypeCode: "DOC002",
             DocumentUpdate: [
               { verification: true, phaseId: 1,remarks:"" }
@@ -114,7 +116,7 @@ const getApplicantsWithPhaseStatus = async (): Promise<{ phaseDocuments: PhaseDo
         ],
         Document: [
           {
-            fileName:"/1234/nice",
+            filename:"/1234/nice",
             documentTypeCode: "DOC001",
             DocumentUpdate: [
               { verification: true, phaseId: 1,remarks:"" },
@@ -122,14 +124,14 @@ const getApplicantsWithPhaseStatus = async (): Promise<{ phaseDocuments: PhaseDo
             ]
           },
           {
-            fileName:"/1234/nice",
+            filename:"/1234/nice",
             documentTypeCode: "DOC002",
             DocumentUpdate: [
               { verification: true, phaseId: 1,remarks:"" }
             ]
           },
           {
-            fileName:"/1234/nice",
+            filename:"/1234/nice",
             documentTypeCode: "DOC003",
             DocumentUpdate: [
               { verification: true, phaseId: 2,remarks:"" }
@@ -161,10 +163,14 @@ const quotaColorMap: { [key: string]: "primary" | "warning" | "danger" } = {
   ST: "danger",
 };
 
-const ApplicantTable: React.FC = () => {
+const ApplicantTable = ({phaseDocuments}:{phaseDocuments:PhaseDocument[]}) => {
+  if(!phaseDocuments || !phaseDocuments.length){
+    return <>
+
+    </>
+  }
   const [loading , setLoading] = useState(true);
   const [applicants, setApplicants] = useState<Applicant[]>([]);
-  const [phaseDocuments, setPhaseDocuments] = useState<PhaseDocument[]>([]);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -173,7 +179,6 @@ const ApplicantTable: React.FC = () => {
       const data = await getApplicantsWithPhaseStatus();
       console.log("phase", data);
       setApplicants(data.applicantsData);
-      setPhaseDocuments(data.phaseDocuments.filter(doc => doc.phaseId === 1));
       setLoading(false)
     }
     fetchData();
@@ -203,7 +208,7 @@ const ApplicantTable: React.FC = () => {
             size="sm"
             variant="flat"
           >
-            {applicant.Allotment[0]?.quota}
+            {applicant.Allotment[0]?.quota || "N/A"}
           </Chip>
         );
       case "actions":

@@ -56,12 +56,12 @@ setTab();  }
     alert("Error in saving data .please check form or contact staff");
   }
   };
-
   useEffect(() => {
     return () => {
       const values = getValues();
       onSubmit(values);
     };
+
   }, []);
 
   return (

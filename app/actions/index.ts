@@ -24,7 +24,6 @@ export async function signUpWithEmailAndPassword(data: {
     console.log(error);
     redirect("/auth");
   }
-  redirect("/form");
 }
 export async function signInWithEmailAndPassword(data: {
   email: string;
@@ -36,7 +35,7 @@ export async function signInWithEmailAndPassword(data: {
     console.log(error);
     redirect("/auth");
   }
-  redirect("/form");
+  redirect("/application");
 }
 export async function Logout() {
   const supabase = createSupabaseServerClient();

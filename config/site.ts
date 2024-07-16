@@ -10,7 +10,7 @@ export const siteConfig = {
     },
     {
       label: "Form",
-      href: "/form",
+      href: "/application",
     },
   ],
   links: {

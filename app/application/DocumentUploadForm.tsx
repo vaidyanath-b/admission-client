@@ -38,6 +38,7 @@ const DocumentUpload: React.FC = () => {
     }
     const file = event.target.files[0];
     if (type === 'document' && code) {
+      console.log(type,code)
       setSelectedFiles((prevState) => ({
         ...prevState,
         [code]: file,
@@ -61,8 +62,9 @@ const DocumentUpload: React.FC = () => {
         url = `${apiUrl}/api/document/${code}`;
       } else if (type === 'allotment' && selectedAllotment) {
         file = selectedFiles[`allotment_${selectedAllotment}`];
-        url = `${apiUrl}/api/document/memo`;
+        url = `${apiUrl}/api/document/allotment/memo`;
       }
+      console.log(url)
 
       if (!file) {
         alert("Please select a file before saving.");
@@ -178,7 +180,7 @@ const DocumentUpload: React.FC = () => {
         >
           {hardcodedAllotments.map((allotment) => (
             <SelectItem key={allotment.toString()} value={allotment}>
-              Allotment {allotment}
+              {"allotment "+ allotment}
             </SelectItem>
           ))}
         </Select>

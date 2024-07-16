@@ -14,7 +14,7 @@ const AddressesForm = ({setTab} : {setTab : () => void}) => {
     throw new Error("useApplicantDetails must be used within an ApplicantDetailsContext");
   }
 
-  const { applicationLoading, permanentAddress, setPermanentAddress, presentAddress, setPresentAddress, guardianAddress, setGuardianAddress} = context;
+  const { applicationLoading, permanentAddress, setPermanentAddress, presentAddress, setPresentAddress, guardianAddress, setGuardianAddress,applicantId} = context;
   const { control, handleSubmit, getValues } = useForm({
     defaultValues: {
       permanentAddress,
@@ -39,7 +39,7 @@ const AddressesForm = ({setTab} : {setTab : () => void}) => {
     const {applicantId:q , ...prData} = data.presentAddress;
      const {applicantId:p , ...pData} = data.permanentAddress
       const {applicantId:g , ...gData} = data.guardianAddress
-    const res = await axios.post(`${apiUrl}/api/applicant`,
+    const res = await axios.post(`${apiUrl}/api/admin/applicant/${applicantId}`,
     {
       permanentAddress:pData,
       presentAddress:prData,
