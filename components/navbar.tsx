@@ -62,7 +62,7 @@ export const CustomNavbar = () => {
     items.map((item:any, index:any) => (
       <NavbarMenuItem key={index}>
         <NextLink href={item.href} passHref>
-          <Link color="foreground" onClick={item.onClick}>
+          <Link color="foreground" onClick={item.onClick} className=" underline">
             {item.label}
           </Link>
         </NextLink>

@@ -45,9 +45,9 @@ export default function MetaState({ children }: { children: any }) {
         getMetaData();
     } , []);
     return (
-        metaLoading ? <Spinner className="h-screen w-full self-center m-auto" color="success" />:
+        
         <MetaContext.Provider value={{ loading:metaLoading,phases, documents, phaseDocuments , setPhases , setDocuments , setPhaseDocuments }}>
-            {children}
+            {metaLoading ? <Spinner className="h-screen w-full self-center m-auto" color="success" />:children}
         </MetaContext.Provider>
     );
 }

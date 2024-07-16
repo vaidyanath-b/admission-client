@@ -183,6 +183,7 @@ const ApplicantTable = ({phaseDocuments}:{phaseDocuments:PhaseDocument[]}) => {
 
   const columns = [
     { name: "Applicant ID", uid: "id" },
+    { name: "Name" , uid:"name" },
     { name: "Branch/Course", uid: "course" },
     { name: "Quota", uid: "quota" },
     ...phaseDocuments.map(doc => ({
@@ -196,6 +197,8 @@ const ApplicantTable = ({phaseDocuments}:{phaseDocuments:PhaseDocument[]}) => {
     switch (columnKey) {
       case "id":
         return <div>{applicant.id}</div>;
+        case "name":
+          return  <div>{applicant.firstName + " " + applicant.lastName}</div>;
       case "course":
         return <div>{applicant.Allotment[0]?.course || "N/A"}</div>;
       case "quota":

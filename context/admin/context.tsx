@@ -6,6 +6,8 @@ export interface IActiveApplication {
   course: string;
   quota: string;
   allotment: number;
+  firstName:string;
+  lastName:string;
 }
 
 export interface IAllotmentCount {

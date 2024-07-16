@@ -80,7 +80,8 @@ export default function ActiveApplicationsTable() {
 
     switch (columnKey) {
       case "name":
-        return cellValue;
+        return `${application.firstName} ${application.lastName} `;
+      
       case "course":
         return <Chip color="primary">{cellValue}</Chip>;
       case "quota":

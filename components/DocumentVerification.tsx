@@ -216,13 +216,12 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
         <ModalContent>
           {(onClose) => (
             <>
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex flex-col justify-between  mb-4">
                 <h2 className="text-xl font-semibold">
-                  Verify Documents for Applicant {applicant.id}
+                  Verify Documents 
                 </h2>
-                <Button color="danger" onPress={onClose}>
-                  Close
-                </Button>
+                <h4> register no : {applicant.id}</h4>
+                <h4> Name {applicant.firstName + " " + applicant.lastName}</h4>
               </div>
               <div className="mb-4">
                 <p>Course: {applicant.Allotment[0]?.course || "N/A"}</p>
@@ -257,9 +256,9 @@ const DocumentVerificationModal: React.FC<DocumentVerificationModalProps> = ({ a
                     className="mb-2 p-2 border rounded"
                   />
                   <div className="flex justify-end">
-                    <Button size="sm" color="success" onPress={() => handleAccept(phaseDocument)} className="mr-2">
+                  {statuses[phaseDocument.documentTypeCode] !== "verified" && <Button size="sm" color="success" onPress={() => handleAccept(phaseDocument)} className="mr-2">
                       Accept
-                    </Button>
+                    </Button>}
                     <Button size="sm" color="danger" onPress={() => handleReject(phaseDocument)}>
                       Reject
                     </Button>
