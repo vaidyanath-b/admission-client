@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
 import {jwtDecode} from "jwt-decode";
+import { Spinner } from "@nextui-org/react";
 
 export default function AuthState({ children }: { children: any }) {
 
@@ -21,12 +22,14 @@ export default function AuthState({ children }: { children: any }) {
 
   async function fetchUserSession() {
     try {
-      const { user, accessToken } = await getUserSession();
+        const { user, accessToken , role } = await getUserSession();
+    
+      setUser(user);
+      setRole(role);
+      console.log("\n\n\n\n " , user , "\n\n\n\n");
       if (accessToken) {
         console.log("decoded token", jwtDecode(accessToken));
       }
-
-      setUser(user);
     } catch (error: any) {
       setError(error.message);
     }
@@ -34,31 +37,15 @@ export default function AuthState({ children }: { children: any }) {
   }
 
   useEffect(() => {
+    console.log("authState");
     fetchUserSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (session) {
-          setUser(session.user as any);
-        const decodedToken = jwtDecode(session.access_token) as any
-        setRole(decodedToken.user_role || "")
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
-      }
-    );
-
-    // Cleanup the listener on component unmount
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
   }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser, authLoading, role }}>
       {authLoading ? (
-        <div>Loading...</div>
+        <Spinner className="h-screen w-full self-center m-auto"color="danger"/>
+
       ) : error ? (
         alert(error)
       ) : (

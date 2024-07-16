@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Navbar,
   NavbarContent,
@@ -19,10 +19,11 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 export const CustomNavbar = () => {
   const context = useContext(AuthContext);
   if (!context) {
+    console.log("error in navbar context")
     return null;
   }
-  const { role } = context;
-  console.log(role, "navbar");
+  const { user ,setUser,role:r} = context;
+  const [ role , setRole] = useState(r);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
@@ -37,7 +38,6 @@ export const CustomNavbar = () => {
     { label: "My Settings", href: "/settings" },
     { label: "Team Settings", href: "/team-settings" },
     { label: "Help & Feedback", href: "/help" },
-    { label: "Log Out", href: "#", onClick: Logout }
   ];
 
   const adminMenuItems = [
@@ -47,9 +47,8 @@ export const CustomNavbar = () => {
     { label: "Verification List", href: "/admin/phasewise" },
     { label: "Applicants", href: "/admin/applicants" },
   ];
-
-  const renderMenuItems = (items) =>
-    items.map((item, index) => (
+  const renderMenuItems = (items:any) =>
+    items.map((item:any, index:any) => (
       <NavbarItem key={index}>
         <NextLink href={item.href} passHref>
           <Link color="foreground" onClick={item.onClick}>
@@ -59,8 +58,8 @@ export const CustomNavbar = () => {
       </NavbarItem>
     ));
 
-  const renderDropdownItems = (items) =>
-    items.map((item, index) => (
+  const renderDropdownItems = (items:any) =>
+    items.map((item:any, index:any) => (
       <NavbarMenuItem key={index}>
         <NextLink href={item.href} passHref>
           <Link color="foreground" onClick={item.onClick}>
@@ -89,7 +88,7 @@ export const CustomNavbar = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {!role && (
+        {!user && (
           <>
             <NavbarItem className="hidden lg:flex">
               <NextLink href="/login" passHref>
@@ -117,8 +116,8 @@ export const CustomNavbar = () => {
           {role === "ADMIN" && renderMenuItems(adminMenuItems)}
         </NavbarContent>
       )}
-            {role && <NavbarItem>
-            <Button onClick={Logout} color="warning" variant="flat">
+            {user && <NavbarItem>
+            <Button onClick={(e)=>{Logout();setUser(null);setRole("")}} color="warning" variant="flat">
               Logout
             </Button>
           </NavbarItem>}

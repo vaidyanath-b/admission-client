@@ -11,6 +11,7 @@ import {
   Button,
   Tooltip,
   useDisclosure,
+  Spinner,
 } from "@nextui-org/react";
 import { FaEye } from "react-icons/fa";
 import DocumentVerificationModal from "./DocumentVerification"; // Adjust the path as necessary
@@ -250,7 +251,7 @@ const ApplicantTable = ({phaseDocuments}:{phaseDocuments:PhaseDocument[]}) => {
   };
 
   return (
-    loading ? <div>Loading....</div>:
+    loading ? <Spinner/>:
     <>
       {selectedApplicant && (
         <DocumentVerificationModal

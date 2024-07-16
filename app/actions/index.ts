@@ -32,15 +32,14 @@ export async function signInWithEmailAndPassword(data: {
   const supabase = createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword(data);
   if (error) {
+    alert("Invalid credentials");
     console.log(error);
-    redirect("/auth");
+    return false;
   }
-  redirect("/application");
+  return true;
 }
 export async function Logout() {
   const supabase = createSupabaseServerClient();
-  const { user } = await getUserSession();
-  console.log(user);
   await supabase.auth.signOut();
   redirect("/auth");
 }

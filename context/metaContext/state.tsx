@@ -6,6 +6,7 @@ import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import axios from "axios";
 import { apiUrl } from "@/lib/env";
+import { Spinner } from "@nextui-org/react";
 
 export default function MetaState({ children }: { children: any }) {
     const [phases, setPhases] = useState<IMetaContext["phases"]>([]);
@@ -14,11 +15,13 @@ export default function MetaState({ children }: { children: any }) {
     const [metaLoading, setMetaLoading] = useState(true);
 
     useEffect(() => {
+        console.log("metaState");
         async function getMetaData() {
             setMetaLoading(true);
             try{
             const {accessToken} = await getUserSession();
             if (!accessToken) {
+                setMetaLoading(false)
                 return;
             }
             const response = await axios.get(`${apiUrl}/api/meta`, {
@@ -42,6 +45,7 @@ export default function MetaState({ children }: { children: any }) {
         getMetaData();
     } , []);
     return (
+        metaLoading ? <Spinner className="h-screen w-full self-center m-auto"color="success" />:
         <MetaContext.Provider value={{ loading:metaLoading,phases, documents, phaseDocuments , setPhases , setDocuments , setPhaseDocuments }}>
             {children}
         </MetaContext.Provider>

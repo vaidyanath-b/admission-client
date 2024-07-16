@@ -8,6 +8,8 @@ import getUserSession from "@/lib/actions";
 
 interface Applicant {
   id: number;
+  firstName:string;
+  lastName:string;
   currentPhaseId: number;
   Allotment: {
     course: string;

@@ -35,7 +35,8 @@ export default function App() {
         password: e.currentTarget.password.value,
         confirm: e.currentTarget.password.value,
     });
-    const {accessToken} = await getUserSession();
+    const {user,accessToken} = await getUserSession();
+    setUser(user)
     if(!accessToken){
       return alert("it went wrong");
     }
@@ -60,10 +61,16 @@ export default function App() {
 }
 const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signInWithEmailAndPassword({
+    const success = await signInWithEmailAndPassword({
         email: e.currentTarget.email.value,
         password: e.currentTarget.password.value,
     });
+    if(success)
+    {
+    const {accessToken,user} = await getUserSession();
+    setUser(user)
+  }
+    
 }
   return (
     <div className="flex flex-col w-full justify-center items-center md:h-full">

@@ -13,15 +13,16 @@ import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
 import { jwtDecode } from "jwt-decode";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
 const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) => {
       const context = useContext(AuthContext);
       if (!context) {
         throw new Error("useAuth must be used within a AuthProvider");
       }
-      const {   user , authLoading } = context;
-
-  
+      const {user , authLoading } = context;
+const router = useRouter()
+      
   const [userError, setUserError] = useState("");
   const [applicationLoading , setApplicationLoading] = useState(true);
   const [applicantDetails, setApplicantDetails] = useState<ApplicantDetails | null>(null);
@@ -57,9 +58,11 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         if(!accessToken){
           return;
         }
-        const {user_role} =  jwtDecode(accessToken) as any
-        if(user_role == "ADMIN"){
-          redirect("/admin")
+          const decodedToken   = jwtDecode(accessToken) as any
+          const role = decodedToken?.user_role || ""
+        if(role !== "APPLICANT"){
+           router.push('/admin')
+           return
         }
 
         console.log("fetching application");
@@ -129,7 +132,10 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setDocuments
       }}
     >
-      {children}
+      
+      {applicationLoading?
+        <Spinner/>:
+      children}
     </ApplicantDetailsContext.Provider>
 }
 

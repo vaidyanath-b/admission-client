@@ -12,6 +12,7 @@ import { ApplicantDetails, ParentDetails, Address, PreviousInstitutionDetails, Q
 import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
+import { Spinner } from "@nextui-org/react";
 const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) => {
       const context = useContext(AuthContext);
       if (!context) {
@@ -123,7 +124,8 @@ const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) =
         setApplicantId
       }}
     >
-      {children}
+      
+      {applicationLoading? <Spinner className="h-screen w-full self-center m-auto"color="warning"/> : children}
     </AdminApplicantContext.Provider>
 }
 

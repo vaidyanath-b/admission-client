@@ -1,8 +1,10 @@
 "use server";
+import { jwtDecode } from "jwt-decode";
 import createSupabaseServerClient from "../supabase/server";
 export default async function getUserSession(): Promise<{
   user: any;
   accessToken: string;
+  role: string;
 }> {
   const supabase = createSupabaseServerClient();
   const userP = supabase.auth.getUser();
@@ -17,19 +19,24 @@ export default async function getUserSession(): Promise<{
         },
       ]) => {
         const user = {
-          id: data.user?.id,
-          email: data.user?.email,
+          ...data,
         };
-        return { user, accessToken: session?.access_token ?? "" };
+        const decodedToken = jwtDecode(session?.access_token || "") as any;
+
+        return {
+          user,
+          accessToken: session?.access_token || "",
+          role: decodedToken?.user_role || "",
+        };
       }
     )
     .catch((error) => {
       console.error("Error fetching user session:", error);
-      return { user: null, accessToken: "" };
+      return { user: null, accessToken: "", role: "" };
     });
 }
 
- async function downloadFile(
+async function downloadFile(
   bucketName: string,
   filePath: string
 ): Promise<string | null> {
@@ -51,7 +58,7 @@ export default async function getUserSession(): Promise<{
     }
 
     if (data) {
-        return Buffer.from(await data.arrayBuffer()).toString("base64");
+      return Buffer.from(await data.arrayBuffer()).toString("base64");
     }
   } catch (error) {
     console.error("Error downloading file:", error);

@@ -6,7 +6,8 @@ import getUserSession from "@/lib/actions";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { apiUrl } from "@/lib/env";
 import { jwtDecode } from "jwt-decode";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
 
 
 export default function AdminState({ children }: { children: any }) {
@@ -14,17 +15,20 @@ export default function AdminState({ children }: { children: any }) {
     if(!apiUrl){
           throw new Error("API_URL not found");
     }
+    const router = useRouter();
     const [activeApplications, setActiveApplications] = useState<IActiveApplication[]>([]);
     const [allotmentCount, setAllotmentCount] = useState<IAllotmentCount[]>([]);
     const [authLoading, setLoading] = useState(true);
     const [error, setError] = useState("");
     async function fetchAdminData() {
+        setLoading(true)
         try {
             const {accessToken} = await getUserSession();
             if(accessToken){
                 const {user_role} = jwtDecode(accessToken) as any;
                 if(user_role == "APPLICANT"){
-                    return redirect('/application')
+                     router.push('/application')
+                     return
                 }
             }
             const activeApplications = await axios.get(`${apiUrl}/api/admin/applications`,{
@@ -43,6 +47,7 @@ export default function AdminState({ children }: { children: any }) {
             });
             setAllotmentCount(allotmentCount.data);
         } catch (error:any) {
+            setLoading(false)
             setError(error.message);
         }
         setLoading(false);
@@ -55,7 +60,7 @@ export default function AdminState({ children }: { children: any }) {
             
             {
                 authLoading ? (
-                    <div>Loading...</div>
+                    <Spinner className="h-screen w-full self-center m-auto"color="danger" />
                 ) : error ? (
                     alert(error)
                 ) : (
