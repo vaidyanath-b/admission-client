@@ -13,15 +13,19 @@ import { AuthContext } from "../auth/context";
 import getUserSession from "@/lib/actions";
 import { apiUrl } from "@/lib/env";
 import { Spinner } from "@nextui-org/react";
+import { useSearchParams } from "next/navigation";
 const ApplicationState: React.FC<{children: React.ReactNode}> = ({ children }) => {
       const context = useContext(AuthContext);
       if (!context) {
         throw new Error("useAuth must be used within a AuthProvider");
       }
+      const searchParams = useSearchParams()
+      const id = searchParams.get("id")
+    
   const { user , authLoading } = context;
   const [userError, setUserError] = useState("");
   const [applicationLoading , setApplicationLoading] = useState(true);
-  const [applicantId , setApplicantId] = useState<number | null>(null)
+  const [applicantId , setApplicantId] = useState<number | null>(id? Number(id) : null);
   const [applicantDetails, setApplicantDetails] = useState<ApplicantDetails | null>(null);
   const [parentDetails, setParentDetails] = useState<ParentDetails | null>(null);
   const [permanentAddress, setPermanentAddress] = useState<Address | null>(null);

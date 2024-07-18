@@ -13,8 +13,10 @@ import { ApplicantDetailsContext } from "@/context/applicantDetails/context";
 import { Input } from "@nextui-org/input";
 import { AdminApplicantContext } from "@/context/adminApplicantDetails/context";
 import { SearchIcon } from "@/components/icons";
+import { useSearchParams } from "next/navigation";
 
 export default function App() {
+
   const [selected, setSelected] = React.useState<any>("personal-details");
   const context = React.useContext(AdminApplicantContext);
   if(!context){

@@ -17,13 +17,16 @@ import {
   Pagination,
   Selection,
   SortDescriptor,
+  Tooltip,
 } from "@nextui-org/react";
 import { ChevronDownIcon, Searchicon } from "./icons";
 import { useContext } from "react";
 import AdminContext from "@/context/admin/context";
 import { IActiveApplication } from "@/context/admin/context";
+import { useRouter } from "next/navigation";
+import { FaEye } from "react-icons/fa";
 
-const INITIAL_VISIBLE_COLUMNS = ["applicantId","name", "course", "quota", "allotment" ];
+const INITIAL_VISIBLE_COLUMNS = ["applicantId","name", "course", "quota", "allotment","actions" ];
 
 const quotaColorMap: Record<string, "success" | "danger" | "primary" | "default" | "secondary" | "warning" | undefined> = {
   General: "success",
@@ -32,6 +35,7 @@ const quotaColorMap: Record<string, "success" | "danger" | "primary" | "default"
 
 export default function ActiveApplicationsTable() {
   const context = useContext(AdminContext);
+  const router = useRouter();
   const applications = context?.activeApplications || [];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -48,11 +52,11 @@ export default function ActiveApplicationsTable() {
   const filteredItems = React.useMemo(() => {
     let filteredApps = [...applications];
 
-    // if (hasSearchFilter) {
-    //   filteredApps = filteredApps.filter((app) =>
-    //     app.name.toLowerCase().includes(filterValue.toLowerCase())
-    //   );
-    // }
+    if (hasSearchFilter) {
+      filteredApps = filteredApps.filter((app) =>
+        app.firstName.toLowerCase().includes(filterValue.toLowerCase()) || app.lastName.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
 
     return filteredApps;
   }, [applications, filterValue]);
@@ -90,6 +94,20 @@ export default function ActiveApplicationsTable() {
         return cellValue;
       case "allotment":
         return cellValue;
+      case "actions":
+          return (
+            <Tooltip content="view applicant">
+              <Button
+                isIconOnly
+                color="primary"
+                variant="light"
+                onPress={() =>router.push(`/admin/application?id=${application.applicantId}`) }
+              >
+                <FaEye />
+              </Button>
+            </Tooltip>
+          );
+  
       default:
         return cellValue;
     }
