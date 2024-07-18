@@ -9,10 +9,10 @@ import { Spinner } from "@nextui-org/react";
 
 export default function AuthState({ children }: { children: any }) {
 
+
   if (!apiUrl) {
     throw new Error("API_URL not found");
   }
-
   const supabase = createClient()
 
   const [user, setUser] = useState(null);
@@ -23,8 +23,11 @@ export default function AuthState({ children }: { children: any }) {
 
   async function fetchUserSession() {
     try {
-        const { user, accessToken , role } = await getUserSession();
-    
+      console.log("awaiting\n\n\n\n");
+      await new Promise(resolve => setTimeout(resolve, 200));
+      console.log("awaited \n\n\n\n\n\n");
+      const { user, accessToken , role } = await getUserSession();
+      console.log("user" , role, "role");
       setUser(user);
       setRole(role);
       console.log("\n\n\n\n " , user , "\n\n\n\n");

@@ -19,6 +19,7 @@ export default function App() {
     const {user , setUser,setAuthStateChanged} = context;
     if (user) {
         router.push("/application");
+        return
     }
   const [selected, setSelected] = React.useState<any>("login");
 

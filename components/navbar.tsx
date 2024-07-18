@@ -22,7 +22,8 @@ export const CustomNavbar = () => {
     throw new Error("Auth Context used outside ")
     
   }
-  const { user ,setUser,role:r} = context;
+  const { user ,setUser,role:r,authLoading} = context;
+  console.log(`rerender ${r}`)
   const [ role , setRole] = useState(r);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -68,9 +69,12 @@ export const CustomNavbar = () => {
         </NextLink>
       </NavbarMenuItem>
     ));
-
+useEffect(()=>{
+  console.log(r,"rerender")
+  setRole(r)
+},[r,authLoading , role])
   return (
-    <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+ !authLoading && <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
         {/* <NavbarBrand>
@@ -106,13 +110,13 @@ export const CustomNavbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {role === "APPLICANT" && renderDropdownItems(menuItems)}
+        {role  && role!="ADMIN" && renderDropdownItems(menuItems)}
         {role === "ADMIN" && renderDropdownItems(adminMenuItems)}
       </NavbarMenu>
 
       {isLargeScreen && (
         <NavbarContent className="hidden lg:flex gap-4" justify="center">
-          {role === "APPLICANT" && renderMenuItems(menuItems)}
+          {role && role !=="ADMIN" && renderMenuItems(menuItems)}
           {role === "ADMIN" && renderMenuItems(adminMenuItems)}
         </NavbarContent>
       )}
