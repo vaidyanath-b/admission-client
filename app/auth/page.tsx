@@ -17,11 +17,11 @@ export default function App() {
         throw new Error("useAuth must be used within a AuthProvider");
     }
     const {user , setUser,setAuthStateChanged} = context;
+    const [selected, setSelected] = React.useState<any>("login");
     if (user) {
         router.push("/application");
         return
     }
-  const [selected, setSelected] = React.useState<any>("login");
 
   const handleSignup = async(e: React.FormEvent<HTMLFormElement>) => {
     try{

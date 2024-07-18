@@ -74,7 +74,7 @@ useEffect(()=>{
   setRole(r)
 },[r,authLoading , role])
   return (
- !authLoading && <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+ !authLoading ? <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
         {/* <NavbarBrand>
@@ -126,6 +126,6 @@ useEffect(()=>{
             </Button>
           </NavbarItem>}
 
-    </Navbar>
+    </Navbar> : <></>
   );
 };
